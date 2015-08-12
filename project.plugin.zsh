@@ -1,5 +1,3 @@
-#!/bin/zsh
-
 hash -d p=$PROJECTS
 
 function p() {
