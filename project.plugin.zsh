@@ -1,4 +1,4 @@
-function p () {
+function p() {
     [[ -d $PROJECTS/$1 ]] && cd $PROJECTS/$1 || mkdir $PROJECTS/$1 && cd $PROJECTS/$1;
 }
 
