@@ -1,3 +1,4 @@
+PROJECTS=${PROJECTS:-~/projects}
 hash -d p=$PROJECTS
 
 function p() {
