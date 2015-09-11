@@ -1,3 +1,3 @@
 # project.plugin.zsh
 
-Zsh plugin to create and navigate projects.
+Zsh plugin for creating projects and navigating between them.
