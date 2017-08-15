@@ -1,0 +1,113 @@
+#!/usr/bin/env zunit
+
+@test 'It should add hashes for projects dirs' {
+    assert "p=${PROJECTS}" in "$(hash -d)"
+    assert "pt=${PROJECTS_TMP}" in "$(hash -d)"
+}
+
+@test 'It should define completion for the command "p"' {
+    assert "${_COMPDEF_ARGS[-1]}" same_as '_p p'
+}
+
+@test 'Command "p" should show a help message' {
+    run p -h
+
+    assert $state equals 0
+    assert "${lines[2]}" same_as "\e[32mProject manager\e[0m (\e[96m${PROJECTS}\e[0m)"
+
+
+    run p --help
+
+    assert $state equals 0
+    assert "${lines[2]}" same_as "\e[32mProject manager\e[0m (\e[96m${PROJECTS}\e[0m)"
+}
+
+@test 'Command "p" should go to the projects directory when a project's name is not specified' {
+    p
+
+    assert $? equals 0
+    assert "$(pwd)" same_as "${PROJECTS}"
+
+
+    p -t
+
+    assert $? equals 0
+    assert "$(pwd)" same_as "${PROJECTS_TMP}"
+}
+
+@test 'Command "p" should create a new project's directory when the project is not already exist' {
+    p my-cool-app
+
+    assert $? equals 0
+    assert "$(pwd)" same_as "${PROJECTS}/my-cool-app"
+
+
+    p -t my-cool-tmp-app
+
+    assert $? equals 0
+    assert "$(pwd)" same_as "${PROJECTS_TMP}/my-cool-tmp-app"
+}
+
+@test 'Command "p" should go to the project's directory when the project is already exists' {
+    mkdir -p "${PROJECTS}/my-app"
+
+    p my-app
+
+    assert $? equals 0
+    assert "$(pwd)" same_as "${PROJECTS}/my-app"
+
+
+    mkdir -p "${PROJECTS_TMP}/my-tmp-app"
+
+    p -t my-tmp-app
+
+    assert $? equals 0
+    assert "$(pwd)" same_as "${PROJECTS_TMP}/my-tmp-app"
+}
+
+@test 'Command "p" should clone a repo when a repo's url specified' {
+    p myapp git@localhost
+    assert "${_GIT_ARGS[-1]}" same_as "clone git@localhost ${PROJECTS}/myapp"
+
+
+    p -t mytmpapp git@localhost
+    assert "${_GIT_ARGS[-1]}" same_as "clone git@localhost ${PROJECTS_TMP}/mytmpapp"
+}
+
+@test 'Command "p" should clone a repo when a project's name is recognized as an repo url' {
+    p https://github.com/voronkovich/project.plugin.zsh.git
+    assert "${_GIT_ARGS[-1]}" same_as "clone https://github.com/voronkovich/project.plugin.zsh.git ${PROJECTS}/project.plugin.zsh"
+
+
+    p -t git@github.com:voronkovich/project.plugin.zsh.git
+    assert "${_GIT_ARGS[-1]}" same_as "clone git@github.com:voronkovich/project.plugin.zsh.git ${PROJECTS_TMP}/project.plugin.zsh"
+
+    echo $_GIT_ARGS
+}
+
+@setup {
+    _CWD="$(pwd)"
+
+    PROJECTS="$(mktemp -d)"
+    PROJECTS_TMP="$(mktemp -d)"
+
+    # stubs/spyes
+    set -A _COMPDEF_ARGS
+    compdef() {
+        _COMPDEF_ARGS+="$@"
+    }
+
+    set -A _GIT_ARGS
+    git() {
+        _GIT_ARGS+="$@"
+    }
+
+    load ../project.plugin.zsh
+}
+
+@teardown {
+    rm -rf "$PROJECTS"
+    rm -rf "$PROJECTS_TMP"
+
+    cd "$_CWD"
+}
