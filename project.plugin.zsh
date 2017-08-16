@@ -1,13 +1,16 @@
 #!/usr/bin/env zsh
 
-PROJECTS=${PROJECTS:-~/projects};
-PROJECTS_TMP=${PROJECTS_TMP:-/tmp/${USER}_projects};
+PROJECTS="${PROJECTS:-$HOME/projects}";
+PROJECTS_TMP="${PROJECTS_TMP:-/tmp/${USER}_projects}";
+PROJECTS_RECIPES="${PROJECTS_RECIPES:-${PROJECTS}/.recipes}";
 
 hash -d p="$PROJECTS";
 hash -d pt="$PROJECTS_TMP";
 
 function p() {
-    zparseopts -D {h,-help}=help {t,-temporary}=tmp {l,-list}=list;
+    zparseopts -D -E {h,-help}=help {t,-temporary}=tmp {l,-list}=list {r,-recipe}:=recipe
+
+    [[ $? -gt 0 ]] && return $?;
 
     if [[ -n $help ]]; then
         echo -en "
@@ -21,6 +24,7 @@ function p() {
 
     \e[32m-h, --help\e[0m       Display this help message
     \e[32m-l, --list\e[0m       List all existing projects
+    \e[32m-r, --recipe\e[0m     Use recipe (\e[96m${PROJECTS_RECIPES}\e[0m)
     \e[32m-t, --temporary\e[0m  Use temporary dir (\e[96m${PROJECTS_TMP}\e[0m)
 
 \e[33mExamples:\e[0m
@@ -63,7 +67,16 @@ function p() {
 
     [[ ! -d "$dir/$name" ]] && mkdir -p "$dir/$name";
     cd "$dir/$name";
+
     [[ -n "$repo" ]] && git clone "$repo" "$dir/$name";
+
+    if [[ -n "$recipe" ]]; then
+        if [[ ! -n "$name" ]]; then
+            echo -e "\e[31mYou can't use the recipes when the project name is not specified." >&2;
+        else
+            "$PROJECTS_RECIPES/${recipe[2]}";
+        fi
+    fi
 
     return 0;
 }
@@ -75,6 +88,7 @@ function _p() {
     _arguments -s -A '-h' -A '--help' \
         '(-h --help)'{-h,--help}'[Show help]' \
         '(-l --list)'{-l,--list}'[List all existing projects]' \
+        '(-r --recipe)'{-r,--recipe}"[Use recipe]:recipe:_files -W ${PROJECTS_RECIPES}" \
         '(-t --temporary)'{-t,--temporary}"[Use temporary dir (${PROJECTS_TMP})]" \
         "::project name:_files -W ${PROJECTS}" \
     && ret=0;

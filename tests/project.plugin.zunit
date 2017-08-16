@@ -74,15 +74,35 @@
     assert "${_GIT_ARGS[-1]}" same_as "clone git@localhost ${PROJECTS_TMP}/mytmpapp"
 }
 
-@test 'Command "p" should clone a repo when a project's name is recognized as an repo url' {
+@test 'Command "p" should clone a repo when a project's name is recognized as a repo url' {
     p https://github.com/voronkovich/project.plugin.zsh.git
     assert "${_GIT_ARGS[-1]}" same_as "clone https://github.com/voronkovich/project.plugin.zsh.git ${PROJECTS}/project.plugin.zsh"
 
 
     p -t git@github.com:voronkovich/project.plugin.zsh.git
     assert "${_GIT_ARGS[-1]}" same_as "clone git@github.com:voronkovich/project.plugin.zsh.git ${PROJECTS_TMP}/project.plugin.zsh"
+}
 
-    echo $_GIT_ARGS
+@test 'Command "p" should run a specified recipe' {
+    run p -r foo my-app
+
+    assert "${lines[1]}" same_as "foo"
+
+
+    run p -tr bar my-tmp-papp
+
+    assert "${lines[1]}" same_as "bar"
+}
+
+@test 'Command "p" should not run a recipe when the project name is not specified' {
+    run p -r foo
+
+    assert "${lines[1]}" same_as "\e[31mYou can't use the recipes when the project name is not specified."
+
+
+    run p -tr bar
+
+    assert "${lines[1]}" same_as "\e[31mYou can't use the recipes when the project name is not specified."
 }
 
 @setup {
@@ -90,6 +110,7 @@
 
     PROJECTS="$(mktemp -d)"
     PROJECTS_TMP="$(mktemp -d)"
+    PROJECTS_RECIPES="$(pwd)/test_fixtures/recipes"
 
     # stubs/spyes
     set -A _COMPDEF_ARGS
