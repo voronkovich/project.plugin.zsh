@@ -1,12 +1,24 @@
 #!/usr/bin/env zunit
 
-@test 'It should add hashes for projects dirs' {
+@test 'Plugin should add hashes for projects dirs' {
     assert "p=${PROJECTS}" in "$(hash -d)"
     assert "pt=${PROJECTS_TMP}" in "$(hash -d)"
 }
 
-@test 'It should define completion for the command "p"' {
+@test 'Plugin should define completion for the command "p"' {
     assert "${_COMPDEF_ARGS[-1]}" same_as '_p p'
+}
+
+@test 'Command "p" should show an error when unknown option specified' {
+    run p -u -h
+
+    assert $state not_equal_to 0
+    assert "${lines[1]}" same_as 'Unknown option: -u.'
+
+    run p -t --unknown-option my-great-app
+
+    assert $state not_equal_to 0
+    assert "${lines[1]}" same_as 'Unknown option: --unknown-option.'
 }
 
 @test 'Command "p" should show a help message' {
@@ -89,20 +101,39 @@
     assert "${lines[1]}" same_as "foo"
 
 
-    run p -tr bar my-tmp-papp
+    run p --temporary --recipe bar my-tmp-papp
 
     assert "${lines[1]}" same_as "bar"
+}
+
+@test 'Command "p" should show an error when the recipe value is not specified' {
+    run p -r --temporary my-tmp-app
+
+    assert $state not_equal_to 0
+    assert "${lines[1]}" same_as 'Recipe option requires a value.'
+}
+
+@test 'Command "p" should show an error when the recipe is not exists or not executable' {
+    run p -r unknown-recipe my-very-good-app
+
+    assert $state not_equal_to 0
+    assert "${lines[1]}" same_as 'Recipe "unknown-recipe" is not exist or not executable.'
+
+    run p -r not-executable my-very-good-app
+
+    assert $state not_equal_to 0
+    assert "${lines[1]}" same_as 'Recipe "not-executable" is not exist or not executable.'
 }
 
 @test 'Command "p" should not run a recipe when the project name is not specified' {
     run p -r foo
 
-    assert "${lines[1]}" same_as "\e[31mYou can't use the recipes when the project name is not specified."
+    assert "${lines[1]}" same_as "You can't use the recipes when the project name is not specified."
 
 
-    run p -tr bar
+    run p --temporary --recipe bar
 
-    assert "${lines[1]}" same_as "\e[31mYou can't use the recipes when the project name is not specified."
+    assert "${lines[1]}" same_as "You can't use the recipes when the project name is not specified."
 }
 
 @setup {

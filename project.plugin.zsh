@@ -8,9 +8,18 @@ hash -d p="$PROJECTS";
 hash -d pt="$PROJECTS_TMP";
 
 function p() {
-    zparseopts -D -E {h,-help}=help {t,-temporary}=tmp {l,-list}=list {r,-recipe}:=recipe
+    zparseopts -D {h,-help}=help {t,-temporary}=tmp {l,-list}=list {r,-recipe}:=recipe || return 1;
 
-    [[ $? -gt 0 ]] && return $?;
+    for o in $@; do
+        if [[ ${o[1]} == '-' ]]; then
+            echo "Unknown option: $o." >&2;
+            return 1;
+        fi
+    done;
+    if [[ -n $recipe && ${recipe[2][1]} == '-' ]]; then
+        echo "Recipe option requires a value." >&2;
+        return 1;
+    fi
 
     if [[ -n $help ]]; then
         echo -en "
@@ -40,6 +49,9 @@ function p() {
     \e[32mp\e[0m https://github.com/zsh-users/zsh-completions.git
     \e[32mp\e[0m -t ohmyzsh https://github.com/robbyrussell/oh-my-zsh.git
 
+    \e[37m# Creates a new project using a recipe\e[0m
+    \e[32mp\e[0m -r rails my-app
+
     \e[37m# Lists all temporary projects\e[0m
     \e[32mp\e[0m -tl
 "
@@ -65,17 +77,27 @@ function p() {
         local repo="$2";
     fi
 
+    if [[ -n "$recipe" ]]; then
+        recipe=$recipe[2];
+
+        if [[ ! -n "$name" ]]; then
+            echo "You can't use the recipes when the project name is not specified." >&2;
+            return 1;
+        fi
+
+        if [[ ! -x "$PROJECTS_RECIPES/$recipe" ]]; then
+            echo "Recipe \"$recipe\" is not exist or not executable." >&2;
+            return 1;
+        fi
+    fi
+
     [[ ! -d "$dir/$name" ]] && mkdir -p "$dir/$name";
     cd "$dir/$name";
 
     [[ -n "$repo" ]] && git clone "$repo" "$dir/$name";
 
     if [[ -n "$recipe" ]]; then
-        if [[ ! -n "$name" ]]; then
-            echo -e "\e[31mYou can't use the recipes when the project name is not specified." >&2;
-        else
-            "$PROJECTS_RECIPES/${recipe[2]}";
-        fi
+        "$PROJECTS_RECIPES/$recipe";
     fi
 
     return 0;
