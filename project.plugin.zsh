@@ -49,7 +49,7 @@ function p() {
     \e[32mp\e[0m https://github.com/zsh-users/zsh-completions.git
     \e[32mp\e[0m -t ohmyzsh https://github.com/robbyrussell/oh-my-zsh.git
 
-    \e[37m# Creates a new project using a recipe\e[0m
+    \e[37m# Creates a new project using a \"rails\" recipe. See \"${PROJECTS_RECIPES}\"\e[0m
     \e[32mp\e[0m -r rails my-app
 
     \e[37m# Lists all temporary projects\e[0m
@@ -110,8 +110,8 @@ function _p() {
     _arguments -s -A '-h' -A '--help' \
         '(-h --help)'{-h,--help}'[Show help]' \
         '(-l --list)'{-l,--list}'[List all existing projects]' \
-        '(-r --recipe)'{-r,--recipe}"[Use recipe]:recipe:_files -W ${PROJECTS_RECIPES}" \
-        '(-t --temporary)'{-t,--temporary}"[Use temporary dir (${PROJECTS_TMP})]" \
+        '(-r --recipe)'{-r,--recipe}"[Use recipe (${PROJECTS_RECIPES})]:recipe:_files -W ${PROJECTS_RECIPES}" \
+        '(-t --temporary)'{-t,--temporary}"[Create temporary project (${PROJECTS_TMP})]" \
         "::project name:_files -W ${PROJECTS}" \
     && ret=0;
 
