@@ -57,7 +57,7 @@ $ p -tr wordpress wpblog
 ### Hashes
 
 Plugin defines two usefull hashes: `~p` for a directory with regular projects and `~pt` for a directory with temporary projects. You can use them like this:
-``sh
+```sh
 $ cp ~p/project1/README.md ~pt/project2
 ```
 
