@@ -53,6 +53,7 @@ In order to run a recipe you should specify it's name by using an `-r` option:
 ```sh
 $ p -tr wordpress wpblog 
 ```
+For more examples see [my recipes](https://github.com/voronkovich/dotfiles/tree/master/projects/.recipes).
 
 ### Hashes
 
