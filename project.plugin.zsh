@@ -104,7 +104,7 @@ function p() {
 }
 
 function _p() {
-    local curcontext="$curcontext" context state state_descr line ret=1;
+    local context state state_descr line ret=1;
     typeset -A opt_args
 
     _arguments -s -A '-h' -A '--help' \
@@ -112,8 +112,16 @@ function _p() {
         '(-l --list)'{-l,--list}'[List all existing projects]' \
         '(-r --recipe)'{-r,--recipe}"[Use recipe (${PROJECTS_RECIPES})]:recipe:_files -W ${PROJECTS_RECIPES}" \
         '(-t --temporary)'{-t,--temporary}"[Create temporary project (${PROJECTS_TMP})]" \
-        "::project name:_files -W ${PROJECTS}" \
+        "::project name:->project" \
     && ret=0;
+
+    if [[ "$state" == 'project' ]]; then
+        if [[ "$words" =~ '\s-\w*t' ]]; then
+            _files -W "${PROJECTS_TMP}";
+        else
+            _files -W "${PROJECTS}";
+        fi
+    fi
 
     return ret;
 }
