@@ -4,7 +4,7 @@ Zsh plugin for creating projects and navigating between them.
 
 ## Installation
 
-Antigen:
+[Antigen](https://github.com/zsh-users/antigen):
 
         antigen bundle voronkovich/project.plugin.zsh
 
@@ -52,6 +52,13 @@ wget https://wordpress.org/latest.zip && unzip latest.zip -d . && rm latest.zip
 In order to run a recipe you should specify it's name by using an `-r` option:
 ```sh
 $ p -tr wordpress wpblog 
+```
+
+### Hashes
+
+Plugin defines two usefull hashes: `~p` for a directory with regular projects and `~pt` for a directory with temporary projects. You can use them like this:
+``sh
+$ cp ~p/project1/README.md ~pt/project2
 ```
 
 ## License
