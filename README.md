@@ -8,6 +8,10 @@ Zsh plugin for creating projects and navigating between them.
 
         antigen bundle voronkovich/project.plugin.zsh
 
+[Zplug](https://github.com/zplug/zplug):
+
+        zplug voronkovich/project.plugin.zsh
+
 Or just clone this repo and add this line into your .zshrc:
 
         source path/to/cloned/repo/project.plugin.zsh
