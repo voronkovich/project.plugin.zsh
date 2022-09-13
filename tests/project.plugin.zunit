@@ -141,7 +141,7 @@
 
     PROJECTS="$(mktemp -d)"
     PROJECTS_TMP="$(mktemp -d)"
-    PROJECTS_RECIPES="$(pwd)/test_fixtures/recipes"
+    PROJECTS_RECIPES="$(pwd)/tests/_fixtures/recipes"
 
     # stubs/spyes
     set -A _COMPDEF_ARGS
