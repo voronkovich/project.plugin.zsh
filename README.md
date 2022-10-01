@@ -1,20 +1,39 @@
 # project.plugin.zsh [![Build Status](https://app.travis-ci.com/voronkovich/project.plugin.zsh.svg?branch=master)](https://app.travis-ci.com/github/voronkovich/project.plugin.zsh)
 
-Zsh plugin for creating projects and navigating between them.
+ZSH plugin for creating projects and navigating between them.
 
 ## Installation
 
-[Antigen](https://github.com/zsh-users/antigen):
+### [Antigen](https://github.com/zsh-users/antigen)
 
-        antigen bundle voronkovich/project.plugin.zsh
+```sh
+antigen bundle voronkovich/project.plugin.zsh
+```
+### [Zplug](https://github.com/zplug/zplug)
 
-[Zplug](https://github.com/zplug/zplug):
+```sh
+zplug "voronkovich/project.plugin.zsh"
+```
 
-        zplug voronkovich/project.plugin.zsh
+### [Oh My Zsh](https://github.com/ohmyzsh/ohmyzsh)
 
-Or just clone this repo and add this line into your .zshrc:
+```sh
+git clone https://github.com/voronkovich/project.plugin.zsh ~/.oh-my-zsh/custom/plugins/project
+```
 
-        source path/to/cloned/repo/project.plugin.zsh
+Edit `.zshrc` to enable the plugin:
+
+```sh
+plugins=(... project)
+```
+
+### Manual
+
+Clone this repo and add this into your `.zshrc`:
+
+```sh
+source path/to/cloned/repo/project.plugin.zsh
+```
 
 ## Usage
 
