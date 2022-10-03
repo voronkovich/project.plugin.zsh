@@ -31,7 +31,7 @@ project() {
     fi
 
     if [[ -n "${opt_help}" ]]; then
-        __project_help
+        __project_help "${0}"
         return
     fi
 
@@ -83,38 +83,42 @@ project() {
 }
 
 __project_help() {
+    local -r name="${1:-project}"
+
     echo -en "
 \e[32mProject manager\e[0m (\e[96m${PROJECTS}\e[0m)
 
 \e[33mUsage:\e[0m
 
-    \e[32mp\e[0m [options] [project_name]
+  \e[32m${name}\e[0m [options] [project_name]
 
 \e[33mOptions:\e[0m
 
-    \e[32m-h, --help\e[0m       Display this help message
-    \e[32m-l, --list\e[0m       List all existing projects
-    \e[32m-r, --recipe\e[0m     Use recipe (\e[96m${PROJECTS_RECIPES}\e[0m)
-    \e[32m-t, --temporary\e[0m  Use temporary dir (\e[96m${PROJECTS_TMP}\e[0m)
+  \e[32m-h, --help\e[0m       Display this help message
+  \e[32m-l, --list\e[0m       List all existing projects
+  \e[32m-r, --recipe\e[0m     Use recipe (\e[96m${PROJECTS_RECIPES}\e[0m)
+  \e[32m-t, --temporary\e[0m  Use temporary dir (\e[96m${PROJECTS_TMP}\e[0m)
 
 \e[33mExamples:\e[0m
 
-    \e[37m# Creates a new project (if it doesn't exists yet) with a name \"symfony-app\" in the \"${PROJECTS}\"
-    # and changes the current working dir to the \"${PROJECTS}/symfony-app\"\e[0m
-    \e[32mp\e[0m symfony-app
+  \e[37m# Creates a new project (if it doesn't exists yet)
+  # with a name \"symfony-app\" in the \"${PROJECTS}\"
+  # and changes the current working dir to the \"${PROJECTS}/symfony-app\"\e[0m
+  \e[32m${name}\e[0m symfony-app
 
-    \e[37m# Creates a new temporary project with a name \"play-with-webpack\" in the \"${PROJECTS_TMP}\"\e[0m
-    \e[32mp\e[0m -t play-with-webpack
+  \e[37m# Creates a new temporary project
+  # with a name \"play-with-webpack\" in the \"${PROJECTS_TMP}\"\e[0m
+  \e[32m${name}\e[0m -t play-with-webpack
 
-    \e[37m# Creates a new project by cloning a repo\e[0m
-    \e[32mp\e[0m https://github.com/zsh-users/zsh-completions.git
-    \e[32mp\e[0m -t ohmyzsh https://github.com/robbyrussell/oh-my-zsh.git
+  \e[37m# Creates a new project by cloning a repo\e[0m
+  \e[32m${name}\e[0m https://github.com/zsh-users/zsh-completions.git
+  \e[32m${name}\e[0m -t ohmyzsh https://github.com/robbyrussell/oh-my-zsh.git
 
-    \e[37m# Creates a new project using a \"rails\" recipe. See \"${PROJECTS_RECIPES}\"\e[0m
-    \e[32mp\e[0m -r rails my-app
+  \e[37m# Creates a new project using a \"rails\" recipe. See \"${PROJECTS_RECIPES}\"\e[0m
+  \e[32m${name}\e[0m -r rails my-app
 
-    \e[37m# Lists all temporary projects\e[0m
-    \e[32mp\e[0m -tl
+  \e[37m# Lists all temporary projects\e[0m
+  \e[32m${name}\e[0m -tl
 "
 }
 
