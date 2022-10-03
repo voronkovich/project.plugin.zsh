@@ -3,6 +3,7 @@
 @test 'Plugin should add hashes for projects dirs' {
     assert "p=${PROJECTS}" in "$(hash -d)"
     assert "pt=${PROJECTS_TMP}" in "$(hash -d)"
+    assert "pr=${PROJECTS_RECIPES}" in "$(hash -d)"
 }
 
 @test 'Plugin should define completion for the command "p"' {

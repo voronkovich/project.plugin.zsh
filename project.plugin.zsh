@@ -4,6 +4,7 @@ PROJECTS_RECIPES="${PROJECTS_RECIPES:-${PROJECTS}/.recipes}"
 
 hash -d p="${PROJECTS}"
 hash -d pt="${PROJECTS_TMP}"
+hash -d pr="${PROJECTS_RECIPES}"
 
 alias p='project'
 
