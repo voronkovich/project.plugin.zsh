@@ -6,64 +6,64 @@
 }
 
 @test 'Plugin should define completion for the command "p"' {
-    assert "${_COMPDEF_ARGS[-1]}" same_as '_p p'
+    assert "${_COMPDEF_ARGS[-1]}" same_as '_project project'
 }
 
-@test 'Command "p" should show an error when unknown option specified' {
-    run p -u -h
+@test 'Command "project" shows an error when unknown option specified' {
+    run project -u -h
 
     assert $state not_equal_to 0
     assert "${lines[1]}" same_as 'Unknown option: -u.'
 
-    run p -t --unknown-option my-great-app
+    run project -t --unknown-option my-great-app
 
     assert $state not_equal_to 0
     assert "${lines[1]}" same_as 'Unknown option: --unknown-option.'
 }
 
-@test 'Command "p" should show a help message' {
-    run p -h
+@test 'Command "project" shows a help message when help option specified' {
+    run project -h
 
     assert $state equals 0
     assert "${lines[2]}" same_as "\e[32mProject manager\e[0m (\e[96m${PROJECTS}\e[0m)"
 
 
-    run p --help
+    run project --help
 
     assert $state equals 0
     assert "${lines[2]}" same_as "\e[32mProject manager\e[0m (\e[96m${PROJECTS}\e[0m)"
 }
 
-@test 'Command "p" should go to the projects directory when a project's name is not specified' {
-    p
+@test 'Command "project" goes to the projects directory when a project\'s name is not specified' {
+    project
 
     assert $? equals 0
     assert "$(pwd)" same_as "${PROJECTS}"
 
 
-    p -t
+    project -t
 
     assert $? equals 0
     assert "$(pwd)" same_as "${PROJECTS_TMP}"
 }
 
-@test 'Command "p" should create a new project's directory when the project is not already exist' {
-    p my-cool-app
+@test 'Command "project" creates a new project\'s directory when the project is not already exist' {
+    project my-cool-app
 
     assert $? equals 0
     assert "$(pwd)" same_as "${PROJECTS}/my-cool-app"
 
 
-    p -t my-cool-tmp-app
+    project -t my-cool-tmp-app
 
     assert $? equals 0
     assert "$(pwd)" same_as "${PROJECTS_TMP}/my-cool-tmp-app"
 }
 
-@test 'Command "p" should go to the project's directory when the project is already exists' {
+@test 'Command "project" goes to the project\'s directory when the project is already exists' {
     mkdir -p "${PROJECTS}/my-app"
 
-    p my-app
+    project my-app
 
     assert $? equals 0
     assert "$(pwd)" same_as "${PROJECTS}/my-app"
@@ -71,67 +71,67 @@
 
     mkdir -p "${PROJECTS_TMP}/my-tmp-app"
 
-    p -t my-tmp-app
+    project -t my-tmp-app
 
     assert $? equals 0
     assert "$(pwd)" same_as "${PROJECTS_TMP}/my-tmp-app"
 }
 
-@test 'Command "p" should clone a repo when a repo's url specified' {
-    p myapp git@localhost
+@test 'Command "project" clones a repo when a repo\'s url specified' {
+    project myapp git@localhost
     assert "${_GIT_ARGS[-1]}" same_as "clone git@localhost ${PROJECTS}/myapp"
 
 
-    p -t mytmpapp git@localhost
+    project -t mytmpapp git@localhost
     assert "${_GIT_ARGS[-1]}" same_as "clone git@localhost ${PROJECTS_TMP}/mytmpapp"
 }
 
-@test 'Command "p" should clone a repo when a project's name is recognized as a repo url' {
-    p https://github.com/voronkovich/project.plugin.zsh.git
+@test 'Command "project" clones a repo when a project\'s name is recognized as a repo url' {
+    project https://github.com/voronkovich/project.plugin.zsh.git
     assert "${_GIT_ARGS[-1]}" same_as "clone https://github.com/voronkovich/project.plugin.zsh.git ${PROJECTS}/project.plugin.zsh"
 
 
-    p -t git@github.com:voronkovich/project.plugin.zsh.git
+    project -t git@github.com:voronkovich/project.plugin.zsh.git
     assert "${_GIT_ARGS[-1]}" same_as "clone git@github.com:voronkovich/project.plugin.zsh.git ${PROJECTS_TMP}/project.plugin.zsh"
 }
 
-@test 'Command "p" should run a specified recipe' {
-    run p -r foo my-app
+@test 'Command "project" runs a specified recipe' {
+    run project -r foo my-app
 
     assert "${lines[1]}" same_as "foo"
 
 
-    run p --temporary --recipe bar my-tmp-papp
+    run project --temporary --recipe bar my-tmp-papp
 
     assert "${lines[1]}" same_as "bar"
 }
 
-@test 'Command "p" should show an error when the recipe value is not specified' {
-    run p -r --temporary my-tmp-app
+@test 'Command "project" shows an error when the recipe value is not specified' {
+    run project -r --temporary my-tmp-app
 
     assert $state not_equal_to 0
     assert "${lines[1]}" same_as 'Recipe option requires a value.'
 }
 
-@test 'Command "p" should show an error when the recipe is not exists or not executable' {
-    run p -r unknown-recipe my-very-good-app
+@test 'Command "project" shows an error when the recipe is not exists or not executable' {
+    run project -r unknown-recipe my-very-good-app
 
     assert $state not_equal_to 0
     assert "${lines[1]}" same_as 'Recipe "unknown-recipe" is not exist or not executable.'
 
-    run p -r not-executable my-very-good-app
+    run project -r not-executable my-very-good-app
 
     assert $state not_equal_to 0
     assert "${lines[1]}" same_as 'Recipe "not-executable" is not exist or not executable.'
 }
 
-@test 'Command "p" should not run a recipe when the project name is not specified' {
-    run p -r foo
+@test 'Command "project" doesn\'t run a recipe when the project name is not specified' {
+    run project -r foo
 
     assert "${lines[1]}" same_as "You can't use the recipes when the project name is not specified."
 
 
-    run p --temporary --recipe bar
+    run project --temporary --recipe bar
 
     assert "${lines[1]}" same_as "You can't use the recipes when the project name is not specified."
 }
@@ -158,8 +158,8 @@
 }
 
 @teardown {
-    rm -rf "$PROJECTS"
-    rm -rf "$PROJECTS_TMP"
+    rm -rf "${PROJECTS}"
+    rm -rf "${PROJECTS_TMP}"
 
-    cd "$_CWD"
+    cd "${_CWD}"
 }
