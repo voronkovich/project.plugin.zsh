@@ -1,4 +1,6 @@
-# project.plugin.zsh [![Build Status](https://app.travis-ci.com/voronkovich/project.plugin.zsh.svg?branch=master)](https://app.travis-ci.com/github/voronkovich/project.plugin.zsh)
+# project.plugin.zsh
+
+[![Tests](https://github.com/voronkovich/project.plugin.zsh/actions/workflows/tests.yaml/badge.svg)](https://github.com/voronkovich/project.plugin.zsh/actions/workflows/tests.yaml)
 
 ZSH plugin for creating projects and navigating between them.
 
