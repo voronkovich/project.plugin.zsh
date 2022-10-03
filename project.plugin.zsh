@@ -1,4 +1,4 @@
-PROJECTS="${PROJECTS:-$HOME/projects}"
+PROJECTS="${PROJECTS:-${HOME}/projects}"
 PROJECTS_TMP="${PROJECTS_TMP:-/tmp/${USER}_projects}"
 PROJECTS_RECIPES="${PROJECTS_RECIPES:-${PROJECTS}/.recipes}"
 
