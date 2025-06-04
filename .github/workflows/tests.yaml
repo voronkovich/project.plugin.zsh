@@ -9,23 +9,21 @@ env:
 
 on:
   pull_request:
-    branches: [ main, master ]
+    branches: [main, master]
     paths:
-      - 'tests/**'
-      - '.github/workflows/tests.yaml'
+      - "tests/**"
+      - ".github/workflows/tests.yaml"
   push:
-    branches: [ main, master ]
+    branches: [main, master]
   workflow_dispatch:
-    branches: [ main, master ]
+    branches: [main, master]
 
 jobs:
-
   zunit-tests:
-
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: ['macos-12','ubuntu-20.04','ubuntu-22.04']
+        os: ["macos-12", "ubuntu-22.04", "ubuntu-24.04"]
       fail-fast: true
 
     steps:
