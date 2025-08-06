@@ -7,6 +7,7 @@ hash -d pt="${PROJECTS_TMP}"
 hash -d pr="${PROJECTS_RECIPES}"
 
 alias p='project'
+alias pt='project -t'
 
 project() {
     local opt opt_help opt_tmp opt_list opt_recipe
